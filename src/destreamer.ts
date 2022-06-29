@@ -49,9 +49,10 @@ async function DoInteractiveLogin(url: string, username?: string): Promise<Sessi
     logger.info('Launching headless Chrome to perform the OpenID Connect dance...');
 
     const browser: puppeteer.Browser = await puppeteer.launch({
-        executablePath: getPuppeteerChromiumPath(),
+        executablePath: 'C:\\Program Files\\Chromium\\Application\\chrome.exe',
+		userDataDir: '%USERPROFILE%\\AppData\\Local\\Chromium\\User Data\\Default',
         headless: false,
-        userDataDir: (argv.keepLoginCookies) ? chromeCacheFolder : undefined,
+//        userDataDir: (argv.keepLoginCookies) ? chromeCacheFolder : undefined,
         args: [
             '--disable-dev-shm-usage',
             '--fast-start',
