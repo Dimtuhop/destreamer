@@ -17,7 +17,7 @@ export type Video = {
 
     // the following properties are all the urls neede for the download
     playbackUrl: string;
-    posterImageUrl: string;
+    posterImageUrl: string | null;
     captionsUrl?: string
 
     // final filename, already sanitized and unique

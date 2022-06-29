@@ -16,7 +16,7 @@ _(Alternative artwork proposals are welcome! Submit one through an Issue.)_
 
 This release would not have been possible without the code and time contributed by two distinguished developers: [@lukaarma](https://github.com/lukaarma) and [@kylon](https://github.com/kylon). Thank you!
 
-### Specialized vesions
+### Specialized versions
 
 - [Politecnico di Milano][polimi]: fork over at https://github.com/SamanFekri/destreamer
 - [Università di Pisa][unipi]: fork over at https://github.com/Guray00/destreamer-unipi
@@ -40,7 +40,7 @@ Hopefully this doesn't break the end user agreement for Microsoft Stream. Since 
 
 ## Prereqs
 
-- [**Node.js**][node]: You'll need Node.js version 8.0 or higher. A GitHub Action runs tests on all major Node versions on every commit. One caveat for Node 8, if you get a `Parse Error` with `code: HPE_HEADER_OVERFLOW` you're out of luck and you'll need to upgrade to Node 10+.
+- [**Node.js**][node]: You'll need Node.js version 8.0 or higher. A GitHub Action runs tests on all major Node versions on every commit. One caveat for Node 8, if you get a `Parse Error` with `code: HPE_HEADER_OVERFLOW` you're out of luck and you'll need to upgrade to Node 10+. PLEASE NOTE WE NO LONGER TEST BUILDS AGAINST NODE 8.x. YOU ARE ON YOUR OWN.
 - **npm**: usually comes with Node.js, type `npm` in your terminal to check for its presence
 - [**ffmpeg**][ffmpeg]: a recent version (year 2019 or above), in `$PATH` or in the same directory as this README file (project root).
 - [**git**][git]: one or more npm dependencies require git.
@@ -61,29 +61,25 @@ Note that destreamer won't run in an elevated (Administrator/root) shell. Runnin
 ## Can i plug in my own browser?
 
 Yes, yes you can. This may be useful if your main browser has some authentication plugins that are required for you to logon to your Microsoft Stream tenant.
-To use your own browser for the authentication part, locate the following snippet in `src/destreamer.ts`:
+To use your own browser for the authentication part, locate the following snippet in `src/destreamer.ts` and `src/TokenCache.ts`:
 
 ```typescript
 const browser: puppeteer.Browser = await puppeteer.launch({
-        executablePath: getPuppeteerChromiumPath(),
-        headless: false,
-        userDataDir: (argv.keepLoginCookies) ? chromeCacheFolder : undefined,
-        args: [
-            '--disable-dev-shm-usage',
-            '--fast-start',
-            '--no-sandbox'
-        ]
-    });
+  executablePath: getPuppeteerChromiumPath(),
+  // …
+});
 ```
+
+Navigate to `chrome://version` in the browser you want to plug in and copy executable path from there. Use double backslash for Windows.
 
 Now, change `executablePath` to reflect the path to your browser and profile (i.e. to use Microsoft Edge on Windows):
 ```typescript
-        executablePath: "'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe' --profile-directory=Default",
+        executablePath: 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
 ```
 
-Note that for Mac/Linux the path will look a little different but no other changes are necessary.
+You can add `userDataDir` right after `executablePath` with the path to your browser profile (also shown in `chrome://version`) if you want that loaded as well.
 
-You need to rebuild (`npm run build`) every time you change this configuration.
+Remember to rebuild (`npm run build`) every time you change this configuration.
 
 ## How to build
 
@@ -184,7 +180,7 @@ https://web.microsoftstream.com/video/xxxxxxxx-aaaa-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
 ### Title template
-The `-t` option allows users to input a template string for the output file names.
+The `-t` option allows user to specify a custom filename for the videos.
 
 You can use one or more of the following magic sequence which will get substituted at runtime. The magic sequence must be surrounded by curly brackets like this: `{title} {publishDate}`
 
@@ -196,8 +192,20 @@ You can use one or more of the following magic sequence which will get substitut
 - `authorEmail`: E-mail of video publisher
 - `uniqueId`: An _unique-enough_ ID generated from the video metadata
 
-Example -
+Examples -
 ```
+Input:
+    -t 'This is an example'
+
+Expected filename:
+    This is an example.mkv
+
+Input:
+    -t 'This is an example by {author}'
+
+Expected filename:
+    This is an example by lukaarma.mkv
+
 Input:
     -t '{title} - {duration} - {publishDate} - {publishTime} - {author} - {authorEmail} - {uniqueId}'
 
@@ -216,6 +224,14 @@ iTerm2 on a Mac -
 ![screenshot](assets/screenshot-mac.png)
 
 By default, downloads are saved under project root `Destreamer/videos/` ( Not the system media Videos folder ), unless specified by `-o` (output directory).
+
+## KNOWN BUGS
+
+If you get a
+```
+[FATAL ERROR] Unknown error: exit code 4
+````
+when running destreamer, then make sure you're running a recent (post year 2019), stable version of **ffmpeg**.
 
 ## Contributing
 

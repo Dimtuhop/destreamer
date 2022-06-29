@@ -45,7 +45,8 @@ export class TokenCache {
             if (err) {
                 return logger.error(err);
             }
-            logger.info('Fresh access token dropped into .token_cachen \n'.green);
+
+            logger.info(`Fresh access token dropped into ${this.tokenCacheFile} \n`.green);
         });
     }
 
@@ -67,9 +68,9 @@ export class TokenCache {
 export async function refreshSession(url: string): Promise<Session> {
 
     const browser: puppeteer.Browser = await puppeteer.launch({
-        executablePath: getPuppeteerChromiumPath(),
+        executablePath: 'C:\\Program Files\\Chromium\\Application\\chrome.exe',
+		userDataDir: '%USERPROFILE%\\AppData\\Local\\Chromium\\User Data\\Default',
         headless: false,            // NEVER TRUE OR IT DOES NOT WORK
-        userDataDir: chromeCacheFolder,
         args: [
             '--disable-dev-shm-usage',
             '--fast-start',
