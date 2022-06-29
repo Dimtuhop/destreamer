@@ -349,7 +349,7 @@ async function downloadVideo(videoGUIDs: Array<string>,
         logger.info(`Video no.${videos.indexOf(video) + 1} downloaded!!\n\n`);
     }
 
-    logger.info('Exiting, this will take some seconds...');
+    logger.info('Exiting, this may take some time...');
 
     logger.debug('[destreamer] closing downloader socket');
     await downloadManager.close();

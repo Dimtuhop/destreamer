@@ -98,7 +98,7 @@ export class DownloadManager {
                 parsed.id !== 'addUrl' &&
                 parsed.id !== 'shutdown' &&
                 parsed.id !== 'getUrlForRetry') {
-                logger.info('[INCOMING] \n' + JSON.stringify(parsed, null, 4) + '\n\n');
+                logger.debug('[INCOMING] \n' + JSON.stringify(parsed, null, 4) + '\n\n');
             }
         });
 
